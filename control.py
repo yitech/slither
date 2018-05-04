@@ -1,7 +1,36 @@
 import skeleton as sk
 import kbhit as kbh
+import printing as ptg
 import time
 import threading
+import random
+
+window_x = sk.window_x
+window_y = sk.window_y
+random_food = lambda:[random.randrange(1,window_x-1),random.randrange(1,window_y-1)]
+
+class playing_inform:
+    def __init__(self):
+        self.snake = sk.snake()
+        self.body = []
+        self.food = random_food()
+        self.env = ptg.envir(window_x,window_y)
+    def game(self,fps=1):
+        snake = self.snake
+        leading = snake.head
+        snake.get_food()
+        wait_key = threading.Thread(target=control, args=(leading,))
+        wait_key.start()
+        while True:
+            self.env.window(self.body,self.food)
+            self.body = snake.get_list()
+            time.sleep(fps)
+            snake.move()
+            if snake.head.location==self.food:
+                snake.get_food()
+                self.food = random_food()
+
+
 
 
 def control(head):
@@ -22,21 +51,9 @@ def control(head):
                 pass
     kb.set_normal_term()
 
-def game(fps=1):
-    snake = sk.snake()
-    leading = snake.head
-    wait_key = threading.Thread(target=control,args=(leading,))
-    wait_key.start()
-
-    while True:
-        print(snake.head.location,snake.head.state)
-        time.sleep(fps)
-        snake.move()
 
 
 
 
 
 
-if __name__=='__main__':
-    game()
