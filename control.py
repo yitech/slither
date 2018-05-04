@@ -1,7 +1,7 @@
 import skeleton as sk
 import kbhit as kbh
 import printing as ptg
-import time
+import time,os,sys
 import threading
 import random
 
@@ -14,23 +14,52 @@ class playing_inform:
         self.snake = sk.snake()
         self.body = []
         self.food = random_food()
-        self.env = ptg.envir(window_x,window_y)
+        self.__env = ptg.envir(window_x,window_y)
+        self.__alive = True
+        self.__starttime = time.time()
     def game(self,fps=1):
+        self.initializing()
         snake = self.snake
         leading = snake.head
         snake.get_food()
         wait_key = threading.Thread(target=control, args=(leading,))
         wait_key.start()
-        while True:
-            self.env.window(self.body,self.food)
+        while self.__alive:
+            self.__env.window(self.body,self.food)
+            print(self.snake.head.location)
             self.body = snake.get_list()
             time.sleep(fps)
             snake.move()
+            self.alive()
             if snake.head.location==self.food:
                 snake.get_food()
                 self.food = random_food()
+        time.sleep(1)
+        self.summarize()
+        sys.exit()
 
-
+    def initializing(self):
+        s = 'initializing'
+        for i in range(0,3):
+            s = s + '.'
+            print(s)
+            time.sleep(0.5)
+            os.system('clear')
+        print('Press wasd to control the slither.')
+        time.sleep(1)
+    def alive(self):
+        head = self.snake.head
+        if head.location[0] in [0,window_x-1] or head.location[1] in [0,window_y-1]:
+            self.__alive = False
+        if len(self.body)!=len(set(self.body)):
+            self.__alive = False
+    def summarize(self):
+        t = time.time()-self.__starttime
+        l = len(self.body)
+        print('Playing time:',t)
+        print('snake length:',l)
+        print('Press Esc to exit.')
+        time.sleep(3)
 
 
 def control(head):
@@ -38,11 +67,11 @@ def control(head):
     keys = {v: k for k, v in directions.items()}
     illegal_key = {'w':'s','s':'w','a':'d','d':'a'}
     kb = kbh.KBHit()
-    print('Use wsad to control the snake')
-
     while True:
         if kb.kbhit():
             c = kb.getch()
+            if ord(c)==27:
+                break
             legal = directions.copy()
             del legal[illegal_key[keys[head.state]]]
             try:

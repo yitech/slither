@@ -54,7 +54,7 @@ class snake:
         tmp = self.head
         snake_list = []
         while tmp!=None:
-            snake_list.append(tmp.location)
+            snake_list.append(tuple(tmp.location))
             tmp = tmp.link
         return snake_list
 
