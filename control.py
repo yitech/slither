@@ -25,11 +25,12 @@ class playing_inform:
         wait_key = threading.Thread(target=control, args=(leading,))
         wait_key.start()
         while self.__alive:
-            self.__env.window(self.body,self.food)
-            print(self.snake.head.location)
-            self.body = snake.get_list()
-            time.sleep(fps)
             snake.move()
+            self.body = snake.get_list()
+            self.__env.window(self.body, self.food)
+            #print(snake.head.location,self.body,self.food)
+            time.sleep(fps)
+
             self.alive()
             if snake.head.location==self.food:
                 snake.get_food()
@@ -47,6 +48,7 @@ class playing_inform:
             os.system('clear')
         print('Press wasd to control the slither.')
         time.sleep(1)
+
     def alive(self):
         head = self.snake.head
         if head.location[0] in [0,window_x-1] or head.location[1] in [0,window_y-1]:
@@ -56,7 +58,7 @@ class playing_inform:
     def summarize(self):
         t = time.time()-self.__starttime
         l = len(self.body)
-        print('Playing time:',t)
+        print('Playing time:%.2f'%t)
         print('snake length:',l)
         print('Press Esc to exit.')
         time.sleep(3)
