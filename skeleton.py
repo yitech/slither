@@ -71,18 +71,3 @@ class snake:
         elif S == 'right':
             self.__tail.link = block([L[0]-1,L[1]],S)
         self.__tail = self.__tail.link
-#Test Unit
-"""
-a = snake()
-print(a.head.location)
-print(a.head.state)
-a.get_food()
-print(a.head.link.location)
-print(a.head.link.state)
-a.move()
-print('\n')
-print(a.head.location)
-print(a.head.state)
-print(a.head.link.location)
-print(a.head.link.state)
-"""
