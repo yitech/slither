@@ -2,8 +2,6 @@ import skeleton as sk
 import sys
 import os
 
-window_x = sk.window_x
-window_y = sk.window_y
 
 
 class envir:
@@ -14,12 +12,12 @@ class envir:
         self.windows_y = windows_y
 
     def window(self,snake_body,food):
-        for j in range(0,window_y):
+        for j in range(0,self.windows_y):
             row = ''
-            for i in range(0,window_x):
-                if i==0 or i==window_x-1:
+            for i in range(0,self.windows_x):
+                if i==0 or i==self.windows_x-1:
                     row = row + self.unit['wall']
-                elif j==0 or j==window_y-1:
+                elif j==0 or j==self.windows_y-1:
                     row = row + self.unit['ceiling']
                 else:
                     if (i,j) in snake_body:

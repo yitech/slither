@@ -15,21 +15,20 @@ class block:
     def copy(self):
         x = block(self.location,self.state)
         return x
+    def move_block(self):
+        L = self.location
+        S = self.state
+        if S == 'up':
+            self.location = [L[0], L[1] - 1]
+        elif S == 'down':
+            self.location = [L[0], L[1] + 1]
+        elif S == 'left':
+            self.location = [L[0] - 1, L[1]]
+        elif S == 'right':
+            self.location = [L[0] + 1, L[1]]
     def replace(self,b):
         self.location= b.location
         self.state = b.state
-
-def move_block(block):
-    L = block.location
-    if block.state == 'up':
-        block.location = [L[0],L[1]-1]
-    elif block.state == 'down':
-        block.location = [L[0],L[1]+1]
-    elif block.state == 'left':
-        block.location = [L[0]-1,L[1]]
-    elif block.state == 'right':
-        block.location = [L[0]+1,L[1]]
-
 
 
 class snake:
@@ -37,12 +36,13 @@ class snake:
         self.__directions = {'w':'up','s':'down','a':'left','d':'right'}
         self.head = block(random_location(),self.__directions[random_key()])
         self.__tail = self.head
+
     def move(self):
         tmp = self.head
         state_buffer = tmp.state
         c = 0
         while tmp!=None:
-            move_block(tmp)
+            tmp.move_block()
             if c>0:
                 prvs = state_buffer
                 state_buffer = tmp.state
@@ -57,7 +57,6 @@ class snake:
             snake_list.append(tuple(tmp.location))
             tmp = tmp.link
         return snake_list
-
 
     def get_food(self):
         L = self.__tail.location

@@ -38,7 +38,6 @@ class playing_inform:
         time.sleep(1)
         self.summarize()
         sys.exit()
-
     def initializing(self):
         s = 'initializing'
         for i in range(0,3):
