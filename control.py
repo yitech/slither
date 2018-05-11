@@ -1,6 +1,5 @@
 import skeleton as sk
 import kbhit as kbh
-import printing as ptg
 import time,os,sys
 import threading
 import random
@@ -9,51 +8,40 @@ window_x = sk.window_x
 window_y = sk.window_y
 random_food = lambda:[random.randrange(1,window_x-1),random.randrange(1,window_y-1)]
 
-class playing_inform:
+class Backend:
     def __init__(self):
+        self.windows_x = window_x
+        self.windows_y = window_y
         self.snake = sk.snake()
         self.body = []
         self.food = random_food()
-        self.__env = ptg.envir(window_x,window_y)
-        self.__alive = True
+        self.__isAlive = True
         self.__starttime = time.time()
-    def game(self,fps=1):
-        self.initializing()
-        snake = self.snake
-        leading = snake.head
-        snake.get_food()
-        wait_key = threading.Thread(target=control, args=(leading,))
-        wait_key.start()
-        while self.__alive:
-            snake.move()
-            self.body = snake.get_list()
-            self.__env.window(self.body, self.food)
-            #print(snake.head.location,self.body,self.food)
-            time.sleep(fps)
 
-            self.alive()
-            if snake.head.location==self.food:
-                snake.get_food()
-                self.food = random_food()
+    def initializeGame(self):
+        self.snake.get_food()
+        wait_key = threading.Thread(target=control, args=(self.snake.head,))
+        wait_key.start()
+
+    def GameSlide(self):
+        self.snake.move()
+        self.body = self.snake.get_list()
+        #print(snake.head.location, self.body, self.food)
+        self.alive()
+        if self.snake.head.location == self.food:
+            self.snake.get_food()
+            self.food = random_food()
+    def endGame(self):
         time.sleep(1)
         self.summarize()
         sys.exit()
-    def initializing(self):
-        s = 'initializing'
-        for i in range(0,3):
-            s = s + '.'
-            print(s)
-            time.sleep(0.5)
-            os.system('clear')
-        print('Press wasd to control the slither.')
-        time.sleep(1)
 
     def alive(self):
         head = self.snake.head
         if head.location[0] in [0,window_x-1] or head.location[1] in [0,window_y-1]:
-            self.__alive = False
+            self.__isAlive = False
         if len(self.body)!=len(set(self.body)):
-            self.__alive = False
+            self.__isAlive = False
     def summarize(self):
         t = time.time()-self.__starttime
         l = len(self.body)

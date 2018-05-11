@@ -1,7 +1,8 @@
-import control
+import printing as ptg
 import sys
 
-G = control.playing_inform()
+G = ptg.envir()
+
 
 if __name__=='__main__':
-    G.game(fps=0.3)
+    G.GraphicAPI(fps=0.3)
