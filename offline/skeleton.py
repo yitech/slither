@@ -1,4 +1,3 @@
-import os,sys
 import random
 
 window_x = 60
